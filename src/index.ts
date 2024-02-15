@@ -1,5 +1,5 @@
-import dataPath from "data";
 import express from "express";
+import dataPath from "./data";
 import listingRouter from "./listing";
 import filesRouter from "./packages/files";
 
