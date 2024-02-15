@@ -14,7 +14,7 @@
     "lint": "biome lint .",
     "format": "biome format . --write",
     "fix": "biome check . --apply",
-    "postinstall": "husky install"
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
