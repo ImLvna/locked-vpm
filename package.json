@@ -1,0 +1,28 @@
+{
+  "name": "lunatemplate",
+  "description": "Starter template for luna's projects",
+  "homepage": "https://github.com/imlvna/template",
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=21.5.0"
+  },
+  "packageManager": "pnpm@8.14.1",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "tsc --noEmit && biome check .",
+    "lint": "biome lint .",
+    "format": "biome format . --write",
+    "fix": "biome check . --apply",
+    "postinstall": "husky install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@biomejs/biome": "^1.5.1",
+    "@types/node": "^20.10.8",
+    "husky": "^8.0.3",
+    "typescript": "^5.3.3"
+  }
+}
