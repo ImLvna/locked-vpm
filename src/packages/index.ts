@@ -25,7 +25,7 @@ export function getListingPackages(): ListingPackageResponse {
         )
       );
 
-      packageMeta.url = `${baseUrl}/${name}/${version}.zip`;
+      packageMeta.url = `${baseUrl}/packages/${name}/${version}.zip`;
 
       const hash = createHash("sha256");
       createReadStream(join(dataPath, "packages", name, `${version}.zip`)).pipe(

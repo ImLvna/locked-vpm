@@ -1,3 +1,4 @@
+import dataPath from "data";
 import express from "express";
 import listingRouter from "./listing";
 import filesRouter from "./packages/files";
@@ -19,6 +20,7 @@ app.use((req, res, next) => {
 app.use("/", listingRouter);
 app.use("/index.json", listingRouter);
 app.use("/files", filesRouter);
+app.use(express.static(dataPath));
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
