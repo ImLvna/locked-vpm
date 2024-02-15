@@ -16,11 +16,4 @@ RUN pnpm build
 
 RUN pnpm prune --prod
 
-FROM node:21.5.0-alpine
-
-ENV NODE_ENV=production
-
-WORKDIR /dist
-COPY --from=0 /src/dist/* ./
-
-CMD ["node", "."]
+CMD ["pnpm", "start"]
