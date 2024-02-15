@@ -14,7 +14,7 @@
     "lint": "biome lint .",
     "format": "biome format . --write",
     "fix": "biome check . --apply",
-    "prepare": "husky install"
+    "prepare": "node .husky/install.mjs"
   },
   "keywords": [],
   "author": "",
