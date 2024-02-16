@@ -54,6 +54,10 @@ filesRouter.get("/:package/:version/package.zip", async (req, res) => {
     req.params.version
   );
 
+  if (!existsSync(basePath)) {
+    return res.status(404).send("Package not found");
+  }
+
   await updateZip(basePath);
 
   res.sendFile(join(basePath, "package.zip"));
