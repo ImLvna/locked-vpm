@@ -2,7 +2,7 @@ import { Router } from "express";
 import { hashPassword } from "../security";
 import adminRouter from "./admin";
 import { listingHandler } from "./listing";
-import filesRouter from "./packages/files";
+import packagesRouter from "./packages";
 const router = Router();
 
 router.use(async (req, res, next) => {
@@ -17,7 +17,7 @@ router.use(async (req, res, next) => {
 
 router.get("/", listingHandler);
 router.get("/index.json", listingHandler);
-router.use("/packages", filesRouter);
+router.use("/packages", packagesRouter);
 router.use("/admin", adminRouter);
 
 export default router;

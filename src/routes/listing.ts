@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import { getSource } from "../data";
-import { getListingPackages } from "./packages";
+import { getListingPackages } from "../packages";
 
 export const listingHandler: RequestHandler = async (req, res) => {
   const source = getSource();

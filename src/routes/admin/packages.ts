@@ -11,17 +11,27 @@ import multer from "multer";
 import { join } from "path";
 import { Extract } from "unzipper";
 import dataPath from "../../data";
-import { PackageMeta } from "../packages";
+import { PackageMeta } from "../../packages";
 
-const uploadRouter = Router();
+const packagesRouter = Router();
 
 const upload = multer({ dest: join(dataPath, "uploads") });
 
-uploadRouter.get("/", (req, res) => {
-  res.send("Hello, admin!");
+packagesRouter.delete("/:package/:version", async (req, res) => {
+  const packagePath = join(
+    dataPath,
+    "packages",
+    req.params.package,
+    req.params.version
+  );
+  if (!existsSync(packagePath)) {
+    return res.status(404).send("Package not found");
+  }
+  await rm(packagePath, { recursive: true, force: true });
+  res.send("Deleted");
 });
 
-uploadRouter.post("/", upload.single("file"), async (req, res) => {
+packagesRouter.post("/upload", upload.single("file"), async (req, res) => {
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
   }
@@ -84,4 +94,4 @@ uploadRouter.post("/", upload.single("file"), async (req, res) => {
   }
 });
 
-export default uploadRouter;
+export default packagesRouter;
