@@ -1,4 +1,11 @@
-import { existsSync, readFileSync, statSync } from "fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  statSync,
+} from "fs";
 import { join } from "path";
 import { SecurityData } from "./security";
 
@@ -16,6 +23,13 @@ if (!checkDir("data") && !checkDir("../data") && !checkDir("/data")) {
   throw new Error("Data directory not found");
 }
 export default dataPath!;
+
+if (!existsSync(join(dataPath!, "uploads")))
+  mkdirSync(join(dataPath!, "uploads"));
+
+for (const dir of readdirSync(join(dataPath!, "uploads"))) {
+  rmSync(join(dataPath!, "uploads", dir), { recursive: true, force: true });
+}
 
 export function getSource() {
   return JSON.parse(readFileSync(join(dataPath, "source.json"), "utf-8"));

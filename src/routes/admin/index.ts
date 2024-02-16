@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { canAccessPackage, hashPassword } from "../security";
+import { canAccessPackage, hashPassword } from "../../security";
+import uploadRouter from "./upload";
 
 const adminRouter = Router();
 
@@ -9,6 +10,7 @@ adminRouter.use(async (req, res, next) => {
   }
   next();
 });
+adminRouter.use("/upload", uploadRouter);
 
 adminRouter.get("/", (req, res) => {
   res.send("Hello, admin!");
