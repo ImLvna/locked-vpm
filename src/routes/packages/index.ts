@@ -1,5 +1,5 @@
 import { createHash } from "crypto";
-import { createReadStream, readFileSync, readdirSync } from "fs";
+import { createReadStream, existsSync, readFileSync, readdirSync } from "fs";
 import { join } from "path";
 import { pipeline } from "stream/promises";
 import dataPath, { getSource } from "../../data";
@@ -36,6 +36,12 @@ export async function getListingPackages(
 
       const versionsMeta = await Promise.all(
         versionDirs.map(async (version) => {
+          if (
+            !existsSync(
+              join(dataPath, "packages", name, version, "package.json")
+            )
+          )
+            return;
           const packageMeta: PackageMeta = JSON.parse(
             readFileSync(
               join(dataPath, "packages", name, version, "package.json"),
@@ -62,14 +68,18 @@ export async function getListingPackages(
 
       return {
         versions: versionsMeta.reduce((acc, meta) => {
+          if (!meta) return acc;
           acc[meta.version] = meta;
           return acc;
         }, {} as ListingPackageVersions["versions"]),
       };
     }) as Promise<ListingPackageVersions>[]
   );
-  return packages.filter(Boolean).reduce((acc, pkg) => {
-    acc[Object.values(pkg.versions)[0].name] = pkg;
-    return acc;
-  }, {} as ListingPackageResponse);
+  return packages
+    .filter(Boolean)
+    .filter((i) => Object.keys(i.versions).length > 0)
+    .reduce((acc, pkg) => {
+      acc[Object.values(pkg.versions)[0].name] = pkg;
+      return acc;
+    }, {} as ListingPackageResponse);
 }
