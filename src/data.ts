@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, statSync } from "fs";
 import { join } from "path";
+import { SecurityData } from "./security";
 
 let dataPath: string;
 
@@ -18,4 +19,8 @@ export default dataPath!;
 
 export function getSource() {
   return JSON.parse(readFileSync(join(dataPath, "source.json"), "utf-8"));
+}
+
+export function getSecurityData(): SecurityData {
+  return JSON.parse(readFileSync(join(dataPath, "security.json"), "utf-8"));
 }

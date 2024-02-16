@@ -1,7 +1,9 @@
-import { readFileSync, readdirSync } from "fs";
+import { createHash } from "crypto";
+import { createReadStream, readFileSync, readdirSync } from "fs";
 import { join } from "path";
-import dataPath, { getSource } from "../data";
-import { sha256File } from "../utils/hash";
+import { pipeline } from "stream/promises";
+import dataPath, { getSource } from "../../data";
+import { canAccessPackage } from "../../security";
 import { updateZip } from "./files";
 
 type ListingPackageResponse = {
@@ -14,7 +16,7 @@ type ListingPackageVersions = {
   };
 };
 
-type PackageMeta = {
+export type PackageMeta = {
   name: string;
   version: string;
   url: string;
@@ -22,11 +24,14 @@ type PackageMeta = {
   [key: string]: any;
 };
 
-export async function getListingPackages(): Promise<ListingPackageResponse> {
+export async function getListingPackages(
+  password: string | undefined
+): Promise<ListingPackageResponse> {
   const baseUrl = getSource().url.replace("/index.json", "");
 
   const packages = await Promise.all(
     readdirSync(join(dataPath, "packages")).map(async (name) => {
+      if (!canAccessPackage(name, password)) return;
       const versionDirs = readdirSync(join(dataPath, "packages", name));
 
       const versionsMeta = await Promise.all(
@@ -42,9 +47,14 @@ export async function getListingPackages(): Promise<ListingPackageResponse> {
 
           await updateZip(join(dataPath, "packages", name, version));
 
-          packageMeta.zipSHA256 = await sha256File(
-            join(dataPath, "packages", name, version, "package.zip")
+          const hash = createHash("sha256");
+          await pipeline(
+            createReadStream(
+              join(dataPath, "packages", name, version, "package.zip")
+            ),
+            hash
           );
+          packageMeta.zipSHA256 = hash.digest("hex");
 
           return packageMeta;
         })
@@ -56,9 +66,9 @@ export async function getListingPackages(): Promise<ListingPackageResponse> {
           return acc;
         }, {} as ListingPackageVersions["versions"]),
       };
-    })
+    }) as Promise<ListingPackageVersions>[]
   );
-  return packages.reduce((acc, pkg) => {
+  return packages.filter(Boolean).reduce((acc, pkg) => {
     acc[Object.values(pkg.versions)[0].name] = pkg;
     return acc;
   }, {} as ListingPackageResponse);

@@ -2,7 +2,7 @@ import archiver from "archiver";
 import { Router } from "express";
 import { createWriteStream, existsSync } from "fs";
 import { join } from "path";
-import dataPath from "../data";
+import dataPath from "../../data";
 
 const filesRouter = Router();
 
