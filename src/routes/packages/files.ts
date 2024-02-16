@@ -1,7 +1,7 @@
 import archiver from "archiver";
 import { Router } from "express";
 import { createWriteStream, existsSync } from "fs";
-import { join } from "path";
+import { join, resolve } from "path";
 import dataPath from "../../data";
 
 const filesRouter = Router();
@@ -60,7 +60,7 @@ filesRouter.get("/:package/:version/package.zip", async (req, res) => {
 
   await updateZip(basePath);
 
-  res.sendFile(join(basePath, "package.zip"));
+  res.sendFile(resolve(join(basePath, "package.zip")));
 });
 
 export default filesRouter;
