@@ -4,10 +4,10 @@ import { getListingPackages } from "./packages";
 
 const listingRouter = Router();
 
-listingRouter.get("/", (req, res) => {
+listingRouter.get("/", async (req, res) => {
   const source = getSource();
 
-  source.packages = getListingPackages();
+  source.packages = await getListingPackages();
 
   res.json(source);
 });

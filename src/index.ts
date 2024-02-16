@@ -1,13 +1,13 @@
 import express from "express";
-import dataPath from "./data";
 import listingRouter from "./listing";
-import filesRouter from "./packages/files";
+import packagesRouter from "./packages/files";
 
 const app = express();
 
 app.use(express.json());
 
 app.use((req, res, next) => {
+  if (!process.env.AUTHENTICATION) return next();
   if (!req.headers.authorization) {
     return res.status(403).send("No authorization header found");
   }
@@ -19,8 +19,7 @@ app.use((req, res, next) => {
 
 app.use("/", listingRouter);
 app.use("/index.json", listingRouter);
-app.use("/files", filesRouter);
-app.use(express.static(dataPath));
+app.use("/packages", packagesRouter);
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
