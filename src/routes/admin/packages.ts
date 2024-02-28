@@ -40,6 +40,7 @@ packagesRouter.post("/upload", upload.single("file"), async (req, res) => {
 
   try {
     await new Promise((resolve, reject) => {
+      // biome-ignore lint/style/noNonNullAssertion: we check for req.file above
       createReadStream(req.file!.path)
         .pipe(Extract({ path: temp }))
         .on("close", resolve)

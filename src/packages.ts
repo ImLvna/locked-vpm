@@ -27,6 +27,7 @@ export type PackageMeta = {
   version: string;
   url: string;
   zipSHA256: string;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   [key: string]: any;
 };
 
